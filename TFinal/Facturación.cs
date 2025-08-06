@@ -1,10 +1,11 @@
+using System;
 using System.Windows.Forms;
 
 namespace TFinal
 {
-    public partial class Form1 : Form
+    public partial class Facturación : Form
     {
-        public Form1()
+        public Facturación()
         {
             InitializeComponent();
         }
@@ -50,7 +51,7 @@ namespace TFinal
 
             productos.Add(p);
             ActualizarTabla();
-            LimpiarCamposProducto();
+            btnLimpiar_Click(null, null);
         }
 
         private void ActualizarTabla()
@@ -67,23 +68,46 @@ namespace TFinal
                 );
             }
         }
-
-        private void LimpiarCamposProducto()
+        private void btnLimpiar_Click(object sender, EventArgs e)
         {
             txtCodigo.Clear();
             txtProducto.Clear();
             txtPrecio.Clear();
             txtCantidad.Clear();
+            txtCodigo.Focus();
+        }
+
+        private void dgvProductos_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (dgvProductos.SelectedRows.Count > 0)
+                {
+                    DialogResult confirm = MessageBox.Show(
+                        "¿Deseas eliminar este producto?",
+                        "Confirmación",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning);
+
+                    if (confirm == DialogResult.Yes)
+                    {
+                        int filaSeleccionada = dgvProductos.SelectedRows[0].Index;
+                        productos.RemoveAt(filaSeleccionada);
+                        ActualizarTabla();
+                    }
+                }
+            }
         }
 
         private void btnCalcularTotal_Click(object sender, EventArgs e)
         {
-            decimal subtotal = 0;
+            decimal subtotal = 0, igv, total;
             foreach (var p in productos)
                 subtotal += p.Importe;
 
-            decimal igv = subtotal * 0.18m;
-            decimal total = subtotal + igv;
+            igv = subtotal * 0.18m;
+            subtotal = subtotal - (subtotal * 0.18m); // Aplicar descuento del 18% como inafecto
+            total = subtotal + igv;
 
             txtInafecto.Text = subtotal.ToString("0.00");
             txtIGV.Text = igv.ToString("0.00");
@@ -91,20 +115,23 @@ namespace TFinal
             txtTotalPagar.Text = total.ToString("0.00");
         }
 
-        private void txtSoles_TextChanged(object sender, EventArgs e)
+        private void txtSoles_KeyDown(object sender, KeyEventArgs e)
         {
-            if (decimal.TryParse(txtSoles.Text, out decimal pago) &&
-            decimal.TryParse(txtTotalPagar.Text, out decimal total))
+            if (e.KeyCode == Keys.Enter)
             {
-                if (pago >= total)
+                if (decimal.TryParse(txtSoles.Text, out decimal pago) &&
+                    decimal.TryParse(txtTotalPagar.Text, out decimal total))
                 {
-                    decimal vuelto = pago - total;
-                    txtVuelto.Text = vuelto.ToString("0.00");
-                }
-                else
-                {
-                    MessageBox.Show("El pago es menor al total a pagar.");
-                    txtVuelto.Clear();
+                    if (pago >= total)
+                    {
+                        decimal vuelto = pago - total;
+                        txtVuelto.Text = vuelto.ToString("0.00");
+                    }
+                    else
+                    {
+                        MessageBox.Show("El pago es menor al total a pagar.");
+                        txtVuelto.Clear();
+                    }
                 }
             }
         }
