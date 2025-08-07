@@ -32,10 +32,10 @@
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
             label1 = new Label();
-            textBox1 = new TextBox();
+            txtUsuario = new TextBox();
             label2 = new Label();
-            textBox2 = new TextBox();
-            button1 = new Button();
+            txtClave = new TextBox();
+            btnLogin = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -70,15 +70,15 @@
             label1.TabIndex = 23;
             label1.Text = "USUARIO";
             // 
-            // textBox1
+            // txtUsuario
             // 
-            textBox1.BackColor = Color.White;
-            textBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox1.ForeColor = Color.FromArgb(62, 56, 95);
-            textBox1.Location = new Point(380, 393);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(295, 34);
-            textBox1.TabIndex = 24;
+            txtUsuario.BackColor = Color.White;
+            txtUsuario.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtUsuario.ForeColor = Color.FromArgb(62, 56, 95);
+            txtUsuario.Location = new Point(380, 393);
+            txtUsuario.Name = "txtUsuario";
+            txtUsuario.Size = new Size(295, 34);
+            txtUsuario.TabIndex = 24;
             // 
             // label2
             // 
@@ -91,31 +91,32 @@
             label2.TabIndex = 25;
             label2.Text = "CONTRASEÑA";
             // 
-            // textBox2
+            // txtClave
             // 
-            textBox2.BackColor = Color.White;
-            textBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox2.ForeColor = Color.FromArgb(62, 56, 95);
-            textBox2.Location = new Point(380, 511);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(295, 34);
-            textBox2.TabIndex = 26;
+            txtClave.BackColor = Color.White;
+            txtClave.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtClave.ForeColor = Color.FromArgb(62, 56, 95);
+            txtClave.Location = new Point(380, 511);
+            txtClave.Name = "txtClave";
+            txtClave.Size = new Size(295, 34);
+            txtClave.TabIndex = 26;
             // 
-            // button1
+            // btnLogin
             // 
-            button1.BackColor = Color.FromArgb(62, 56, 95);
-            button1.FlatAppearance.BorderColor = Color.FromArgb(62, 56, 95);
-            button1.FlatAppearance.MouseDownBackColor = Color.FromArgb(70, 45, 120);
-            button1.FlatAppearance.MouseOverBackColor = Color.FromArgb(70, 45, 120);
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("Franklin Gothic Medium", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            button1.ForeColor = Color.FromArgb(228, 218, 252);
-            button1.Location = new Point(477, 579);
-            button1.Name = "button1";
-            button1.Size = new Size(142, 56);
-            button1.TabIndex = 27;
-            button1.Text = "INGRESAR";
-            button1.UseVisualStyleBackColor = false;
+            btnLogin.BackColor = Color.FromArgb(62, 56, 95);
+            btnLogin.FlatAppearance.BorderColor = Color.FromArgb(62, 56, 95);
+            btnLogin.FlatAppearance.MouseDownBackColor = Color.FromArgb(70, 45, 120);
+            btnLogin.FlatAppearance.MouseOverBackColor = Color.FromArgb(70, 45, 120);
+            btnLogin.FlatStyle = FlatStyle.Flat;
+            btnLogin.Font = new Font("Franklin Gothic Medium", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnLogin.ForeColor = Color.FromArgb(228, 218, 252);
+            btnLogin.Location = new Point(440, 588);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(178, 56);
+            btnLogin.TabIndex = 27;
+            btnLogin.Text = "INICIAR SESIÓN";
+            btnLogin.UseVisualStyleBackColor = false;
+            btnLogin.Click += btnLogin_Click;
             // 
             // Login
             // 
@@ -123,10 +124,10 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(794, 738);
-            Controls.Add(button1);
-            Controls.Add(textBox2);
+            Controls.Add(btnLogin);
+            Controls.Add(txtClave);
             Controls.Add(label2);
-            Controls.Add(textBox1);
+            Controls.Add(txtUsuario);
             Controls.Add(label1);
             Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
@@ -143,9 +144,9 @@
         private PictureBox pictureBox2;
         private PictureBox pictureBox1;
         private Label label1;
-        private TextBox textBox1;
+        private TextBox txtUsuario;
         private Label label2;
-        private TextBox textBox2;
-        private Button button1;
+        private TextBox txtClave;
+        private Button btnLogin;
     }
 }
