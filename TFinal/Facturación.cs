@@ -1,8 +1,13 @@
 using System;
 using System.Windows.Forms;
+
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
+
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Font = iTextSharp.text.Font;
 
 namespace TFinal
 {
@@ -142,6 +147,92 @@ namespace TFinal
         private void Facturación_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void btnImprimir_Click(object sender, EventArgs e)
+        {
+            string folderPath = @"C:\FacturasGeneradas\";
+            Directory.CreateDirectory(folderPath);
+
+            string codigoFactura = "FAC-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            string filePath = Path.Combine(folderPath, $"{codigoFactura}.pdf");
+
+            Document doc = new Document(PageSize.A4, 25, 25, 25, 25);
+            PdfWriter.GetInstance(doc, new FileStream(filePath, FileMode.Create));
+            doc.Open();
+
+            // Logo
+            string logoPath = @"C:\Users\Yunni\Downloads\logo1.png";
+            if (File.Exists(logoPath))
+            {
+                iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(logoPath);
+                logo.ScaleToFit(80f, 80f);
+                logo.Alignment = Element.ALIGN_LEFT;
+                doc.Add(logo);
+            }
+
+            // Título
+            Font tituloFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+            Paragraph titulo = new Paragraph("IYUGU MINIMARKET\nFACTURA DE VENTA", tituloFont);
+            titulo.Alignment = Element.ALIGN_CENTER;
+            doc.Add(titulo);
+            doc.Add(new Paragraph("\n"));
+
+            // Datos del cliente
+            Font boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
+            doc.Add(new Paragraph("DATOS DEL CLIENTE", boldFont));
+            doc.Add(new Paragraph("Tipo de Documento: " + cbTipoDoc.Text));
+            doc.Add(new Paragraph("Razón Social: " + txtRazon.Text));
+            doc.Add(new Paragraph("Nombre Completo: " + txtNombre.Text));
+            doc.Add(new Paragraph("Número de Documento: " + txtDocumento.Text));
+            doc.Add(new Paragraph("Fecha: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")));
+            doc.Add(new Paragraph("Código de Factura: " + codigoFactura));
+            doc.Add(new Paragraph("-------------------------------------------------------------"));
+
+            // Tabla de productos
+            PdfPTable tabla = new PdfPTable(5);
+            tabla.WidthPercentage = 100;
+            tabla.SetWidths(new float[] { 1, 3, 2, 1, 2 });
+
+            tabla.AddCell("Código");
+            tabla.AddCell("Producto");
+            tabla.AddCell("Precio");
+            tabla.AddCell("Cantidad");
+            tabla.AddCell("Importe");
+
+            foreach (DataGridViewRow fila in dgvProductos.Rows)
+            {
+                if (fila.Cells["ColCodigo"].Value != null)
+                {
+                    tabla.AddCell(fila.Cells["ColCodigo"].Value.ToString());
+                    tabla.AddCell(fila.Cells["ColProducto"].Value.ToString());
+                    tabla.AddCell(fila.Cells["ColPrecio"].Value.ToString());
+                    tabla.AddCell(fila.Cells["ColCantidad"].Value.ToString());
+                    tabla.AddCell(fila.Cells["ColImporte"].Value.ToString());
+                }
+            }
+
+            doc.Add(tabla);
+            doc.Add(new Paragraph("-------------------------------------------------------------"));
+
+            // Totales
+            doc.Add(new Paragraph("TOTAL INAFECTO: S/ " + txtInafecto.Text));
+            doc.Add(new Paragraph("IGV (18%): S/ " + txtIGV.Text));
+            doc.Add(new Paragraph("IMPORTE TOTAL: S/ " + txtImporte.Text));
+            doc.Add(new Paragraph("TOTAL A PAGAR: S/ " + txtTotalPagar.Text));
+
+            doc.Add(new Paragraph("-------------------------------------------------------------"));
+
+            // Pago
+            doc.Add(new Paragraph("MONTO PAGADO: S/ " + txtSoles.Text));
+            doc.Add(new Paragraph("VUELTO: S/ " + txtVuelto.Text));
+
+            Font italicFont = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 11);
+            doc.Add(new Paragraph("\nGracias por su compra!", italicFont));
+
+            doc.Close();
+
+            MessageBox.Show("Factura generada correctamente en:\n" + filePath);
         }
     }
 }

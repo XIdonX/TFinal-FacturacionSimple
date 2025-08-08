@@ -35,11 +35,11 @@
             label5 = new Label();
             label6 = new Label();
             label8 = new Label();
-            txtRazonSocial = new TextBox();
-            txtNombreCompleto = new TextBox();
-            txtNumeroDocumento = new TextBox();
+            txtRazon = new TextBox();
+            txtNombre = new TextBox();
+            txtDocumento = new TextBox();
             groupBox1 = new GroupBox();
-            mbTipoDocumento = new ComboBox();
+            cbTipoDoc = new ComboBox();
             label9 = new Label();
             groupBox4 = new GroupBox();
             txtCantidad = new TextBox();
@@ -147,36 +147,36 @@
             label8.TabIndex = 7;
             label8.Text = "Precio:";
             // 
-            // txtRazonSocial
+            // txtRazon
             // 
-            txtRazonSocial.Location = new Point(127, 61);
-            txtRazonSocial.Name = "txtRazonSocial";
-            txtRazonSocial.Size = new Size(297, 25);
-            txtRazonSocial.TabIndex = 10;
+            txtRazon.Location = new Point(127, 61);
+            txtRazon.Name = "txtRazon";
+            txtRazon.Size = new Size(297, 25);
+            txtRazon.TabIndex = 10;
             // 
-            // txtNombreCompleto
+            // txtNombre
             // 
-            txtNombreCompleto.Location = new Point(177, 99);
-            txtNombreCompleto.Name = "txtNombreCompleto";
-            txtNombreCompleto.Size = new Size(247, 25);
-            txtNombreCompleto.TabIndex = 11;
+            txtNombre.Location = new Point(177, 99);
+            txtNombre.Name = "txtNombre";
+            txtNombre.Size = new Size(247, 25);
+            txtNombre.TabIndex = 11;
             // 
-            // txtNumeroDocumento
+            // txtDocumento
             // 
-            txtNumeroDocumento.Location = new Point(215, 139);
-            txtNumeroDocumento.Name = "txtNumeroDocumento";
-            txtNumeroDocumento.Size = new Size(209, 25);
-            txtNumeroDocumento.TabIndex = 12;
+            txtDocumento.Location = new Point(215, 139);
+            txtDocumento.Name = "txtDocumento";
+            txtDocumento.Size = new Size(209, 25);
+            txtDocumento.TabIndex = 12;
             // 
             // groupBox1
             // 
             groupBox1.CausesValidation = false;
-            groupBox1.Controls.Add(mbTipoDocumento);
-            groupBox1.Controls.Add(txtNombreCompleto);
-            groupBox1.Controls.Add(txtNumeroDocumento);
+            groupBox1.Controls.Add(cbTipoDoc);
+            groupBox1.Controls.Add(txtNombre);
+            groupBox1.Controls.Add(txtDocumento);
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(txtRazonSocial);
+            groupBox1.Controls.Add(txtRazon);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label5);
             groupBox1.Font = new Font("Segoe UI Semilight", 7.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -188,15 +188,15 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Datos de Cliente";
             // 
-            // mbTipoDocumento
+            // cbTipoDoc
             // 
-            mbTipoDocumento.FlatStyle = FlatStyle.System;
-            mbTipoDocumento.FormattingEnabled = true;
-            mbTipoDocumento.Items.AddRange(new object[] { "DNI", "RUC" });
-            mbTipoDocumento.Location = new Point(186, 31);
-            mbTipoDocumento.Name = "mbTipoDocumento";
-            mbTipoDocumento.Size = new Size(127, 25);
-            mbTipoDocumento.TabIndex = 13;
+            cbTipoDoc.FlatStyle = FlatStyle.System;
+            cbTipoDoc.FormattingEnabled = true;
+            cbTipoDoc.Items.AddRange(new object[] { "DNI", "RUC" });
+            cbTipoDoc.Location = new Point(186, 31);
+            cbTipoDoc.Name = "cbTipoDoc";
+            cbTipoDoc.Size = new Size(127, 25);
+            cbTipoDoc.TabIndex = 13;
             // 
             // label9
             // 
@@ -338,6 +338,7 @@
             btnImprimir.TabIndex = 22;
             btnImprimir.Text = "Imprimir";
             btnImprimir.UseVisualStyleBackColor = false;
+            btnImprimir.Click += btnImprimir_Click;
             // 
             // groupBox3
             // 
@@ -610,11 +611,11 @@
         private Label label5;
         private Label label6;
         private Label label8;
-        private TextBox txtRazonSocial;
-        private TextBox txtNombreCompleto;
-        private TextBox txtNumeroDocumento;
+        private TextBox txtRazon;
+        private TextBox txtNombre;
+        private TextBox txtDocumento;
         private GroupBox groupBox1;
-        private ComboBox mbTipoDocumento;
+        private ComboBox cbTipoDoc;
         private Label label9;
         private GroupBox groupBox4;
         private Label label7;
