@@ -72,6 +72,7 @@
             colCantidad = new DataGridViewTextBoxColumn();
             colImporte = new DataGridViewTextBoxColumn();
             pictureBox1 = new PictureBox();
+            dateTimePicker1 = new DateTimePicker();
             groupBox1.SuspendLayout();
             groupBox4.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -498,6 +499,7 @@
             dgvProductos.BackgroundColor = Color.White;
             dgvProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvProductos.Columns.AddRange(new DataGridViewColumn[] { colCodigo, colProducto, colPrecio, colCantidad, colImporte });
+            dgvProductos.GridColor = Color.FromArgb(84, 76, 133);
             dgvProductos.Location = new Point(138, 434);
             dgvProductos.MultiSelect = false;
             dgvProductos.Name = "dgvProductos";
@@ -553,12 +555,24 @@
             pictureBox1.TabIndex = 25;
             pictureBox1.TabStop = false;
             // 
+            // dateTimePicker1
+            // 
+            dateTimePicker1.CalendarForeColor = Color.FromArgb(62, 56, 95);
+            dateTimePicker1.CalendarMonthBackground = Color.White;
+            dateTimePicker1.CalendarTitleBackColor = Color.FromArgb(70, 45, 120);
+            dateTimePicker1.CalendarTitleForeColor = Color.FromArgb(62, 56, 95);
+            dateTimePicker1.Location = new Point(138, 643);
+            dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.Size = new Size(279, 27);
+            dateTimePicker1.TabIndex = 26;
+            // 
             // Facturación
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(889, 774);
+            Controls.Add(dateTimePicker1);
             Controls.Add(dgvProductos);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
@@ -574,6 +588,7 @@
             Margin = new Padding(5, 4, 5, 4);
             Name = "Facturación";
             Text = "Form1";
+            FormClosed += Facturación_FormClosed;
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -632,5 +647,6 @@
         private DataGridViewTextBoxColumn colCantidad;
         private DataGridViewTextBoxColumn colImporte;
         private PictureBox pictureBox1;
+        private DateTimePicker dateTimePicker1;
     }
 }

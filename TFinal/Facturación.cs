@@ -1,5 +1,8 @@
 using System;
 using System.Windows.Forms;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 
 namespace TFinal
 {
@@ -134,6 +137,11 @@ namespace TFinal
                     }
                 }
             }
+        }
+
+        private void Facturación_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
