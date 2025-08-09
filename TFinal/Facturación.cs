@@ -1,9 +1,3 @@
-using System;
-using System.Windows.Forms;
-
-using System.Collections.Generic;
-using System.IO;
-using System.Globalization;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Font = iTextSharp.text.Font;
@@ -14,7 +8,7 @@ namespace TFinal
     {
 
         // Colores personalizados basados en el diseño
-        private readonly BaseColor COLOR_TITULO = new BaseColor(50, 50, 50);  // Gris oscuro
+        private readonly BaseColor COLOR_TITULO = new BaseColor(62, 56, 95);  // Morado oscuro
         private readonly BaseColor COLOR_TEXTO = new BaseColor(70, 70, 70);    // Gris medio
         private readonly BaseColor COLOR_DESTACADO = new BaseColor(40, 40, 40); // Gris más oscuro
 
@@ -23,14 +17,59 @@ namespace TFinal
             InitializeComponent();
         }
 
+        //Validación de campos de texto para que solo acepten números y un punto decimal
+        private void soloNumeros(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true; // Bloquea el carácter
+
+                MessageBox.Show("Solo se permiten números.", "Entrada inválida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Evitar más de un punto decimal
+            TextBox txt = sender as TextBox;
+            if (e.KeyChar == '.' && txt.Text.Contains("."))
+            {
+                // Permitir letras, espacio y tecla de borrar
+                if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && e.KeyChar != ' ')
+                {
+                    e.Handled = true; // Bloquea el carácter
+                    MessageBox.Show("Solo se permiten letras.", "Entrada inválida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+            }
+        }
+
+        // Validación de campos de texto para que solo acepten letras y espacios
+        private void SoloLetras(object sender, KeyPressEventArgs e)
+        {
+            // Permitir letras, espacio y tecla de borrar
+            if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && e.KeyChar != ' ')
+            {
+                e.Handled = true; // Bloquea el carácter
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Campos de solo números
+            txtCodigo.KeyPress += soloNumeros;
+            txtPrecio.KeyPress += soloNumeros;
+            txtCantidad.KeyPress += soloNumeros;
+            txtSoles.KeyPress += soloNumeros;
 
 
+            // Campos de solo letras
+            txtRazon.KeyPress += SoloLetras;
+            txtNombre.KeyPress += SoloLetras;
+            txtDocumento.KeyPress += soloNumeros;
         }
 
         private List<Producto> productos = new List<Producto>();
 
+        //Validación al ingresar productos
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtCodigo.Text) ||
@@ -54,6 +93,7 @@ namespace TFinal
                 return;
             }
 
+            // Verificar si el código ya existe
             Producto p = new Producto
             {
                 Codigo = txtCodigo.Text,
@@ -90,6 +130,7 @@ namespace TFinal
             txtCodigo.Focus();
         }
 
+        // Eliminar producto al seleccionar una fila y presionar la tecla suprimir
         private void dgvProductos_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -112,6 +153,7 @@ namespace TFinal
             }
         }
 
+        // Validación al ingresar datos del cliente
         private void btnCalcularTotal_Click(object sender, EventArgs e)
         {
             decimal subtotal = 0, igv, total;
@@ -128,6 +170,8 @@ namespace TFinal
             txtTotalPagar.Text = total.ToString("0.00");
         }
 
+
+        // Validación al ingresar el monto de pago
         private void txtSoles_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -149,6 +193,8 @@ namespace TFinal
             }
         }
 
+        // Cerrar la aplicación al cerrar el formulario
+        //es importante para evitar que la aplicación siga corriendo en segundo plano
         private void Facturación_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
@@ -158,14 +204,15 @@ namespace TFinal
         {
             try
             {
+                //folderPath sirve para guardar las facturas generadas
                 string folderPath = @"C:\Users\Yunni\Downloads\FacturasGeneradas\";
                 Directory.CreateDirectory(folderPath);
 
                 string codigoFactura = "B" + DateTime.Now.ToString("yyyyMMddHHmmss");
-                //nombre del archivo con código de factura y extensión .pdf
+                //nombre del archivo con código de factura y extensión .pdf 
                 string filePath = Path.Combine(folderPath, $"{codigoFactura}.pdf");
 
-                // Configuración del documento (+80mm de ancho)
+                // Configuración del documento (aprox +80mm de ancho) 
                 float ancho = 250f;
                 var pageRect = new iTextSharp.text.Rectangle(ancho, 1000f);
                 Document doc = new Document(pageRect, 10, 10, 10, 10);
@@ -173,37 +220,44 @@ namespace TFinal
                 doc.Open();
 
                 // Configuración de fuentes
-                var negritaFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 9);
-                var negritaFont2 = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
-                var normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 9);
-                var normalFont2 = FontFactory.GetFont(FontFactory.HELVETICA, 8);
-                var smallFont = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+                var negritaFont3 = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11, COLOR_TITULO);  // Morado oscuro
+                var negritaFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 9, COLOR_TITULO);    // Morado oscuro
+                var negritaFont2 = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8, COLOR_TITULO);   // Morado oscuro
+                var normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 9, COLOR_TEXTO);           // Gris medio
+                var normalFont2 = FontFactory.GetFont(FontFactory.HELVETICA, 8, COLOR_TEXTO);          // Gris medio
+                var smallFont = FontFactory.GetFont(FontFactory.HELVETICA, 8, COLOR_DESTACADO);        // Gris oscuro
 
-                // Logo centrado en la parte superior
+                // Logo centrado 
                 string logoPath = @"C:\Users\Yunni\Downloads\logo1.png";
                 if (File.Exists(logoPath))
                 {
                     iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(logoPath);
                     logo.Alignment = Element.ALIGN_CENTER;
-                    logo.ScaleToFit(60f, 60f);
+                    logo.ScaleToFit(100f, 100f);
                     doc.Add(logo);
-                    //doc.Add(new Paragraph(" "));
+                    //doc.Add(new Paragraph(" ")); 
                 }
 
-                // Encabezado - Nombre del negocio (centrado)
-                Paragraph titulo = new Paragraph("IYUGU MINIMARKET", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                // Encabezado
+                Paragraph titulo = new Paragraph("IYUGU MINIMARKET", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 13, COLOR_TITULO));
                 titulo.Alignment = Element.ALIGN_CENTER;
                 doc.Add(titulo);
 
-                // RUC (centrado)
+                // RUC
                 doc.Add(new Paragraph("RUC: 12345678901", smallFont) { Alignment = Element.ALIGN_CENTER });
 
-                // Tipo de documento y número (centrado)
-                doc.Add(new Paragraph("BOLETA / FACTURA", negritaFont) { Alignment = Element.ALIGN_CENTER });
+                if (cbTipoDoc.Text == "DNI")
+                {
+                    doc.Add(new Paragraph("BOLETA DE VENTA ELECTRÓNICA", negritaFont) { Alignment = Element.ALIGN_CENTER });
+                }
+                else
+                {
+                    doc.Add(new Paragraph("FACTURA ELECTRÓNICA", negritaFont) { Alignment = Element.ALIGN_CENTER });
+                }
                 doc.Add(new Paragraph($"N° {codigoFactura}", normalFont) { Alignment = Element.ALIGN_CENTER });
                 doc.Add(new Paragraph(" "));
 
-                // Datos del cliente (alineados a la izquierda con sangría)
+                // Sección de datos del cliente
                 Paragraph datosCliente = new Paragraph();
                 datosCliente.Alignment = Element.ALIGN_LEFT;
                 datosCliente.Add(new Phrase($"Tipo Doc: {cbTipoDoc.Text}\n", normalFont));
@@ -212,30 +266,30 @@ namespace TFinal
                 datosCliente.Add(new Phrase($"N° Documento: {txtDocumento.Text}", normalFont));
                 doc.Add(datosCliente);
 
-                // Fecha y hora (alineados a la izquierda con sangría)
+                // Fecha y hora
                 string periodo = DateTime.Now.Hour < 12 ? "a. m." : "p. m.";
                 string horaFormateada = $"{DateTime.Now:hh:mm} {periodo}";
                 doc.Add(new Paragraph($"Fecha: {DateTime.Now:dd/MM/yyyy}   Hora: {horaFormateada}", normalFont) { Alignment = Element.ALIGN_LEFT });
                 doc.Add(new Paragraph(" "));
 
-                // Tabla de productos (5 columnas, alineación exacta como en imagen)
+                // Tabla de productos 
                 PdfPTable tabla = new PdfPTable(5);
                 tabla.WidthPercentage = 100;
-                tabla.SetWidths(new float[] { 0.8f, 2.5f, 0.8f, 0.8f, 1.1f }); // Proporciones exactas
+                tabla.SetWidths(new float[] { 0.8f, 2.5f, 0.8f, 0.8f, 1.1f }); // Proporciones exactas 
 
-                // Eliminar bordes y ajustar padding
+                // Eliminar bordes y ajustar padding 
                 tabla.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                 tabla.DefaultCell.Padding = 1;
                 tabla.DefaultCell.PaddingBottom = 3;
 
-                // Encabezados de tabla (negrita, alineación exacta)
+                // Encabezados de tabla
                 AddCell(tabla, "COD", negritaFont2, Element.ALIGN_LEFT);
                 AddCell(tabla, "PRODUCTO", negritaFont2, Element.ALIGN_CENTER);
                 AddCell(tabla, "P.U", negritaFont2, Element.ALIGN_LEFT);
-                AddCell(tabla, "CANT", negritaFont2, Element.ALIGN_CENTER);
+                AddCell(tabla, "CANT", negritaFont2, Element.ALIGN_LEFT);
                 AddCell(tabla, "IMPORTE", negritaFont2, Element.ALIGN_LEFT);
 
-                // Productos (alineación exacta como encabezados)
+                // Productos
                 foreach (DataGridViewRow fila in dgvProductos.Rows)
                 {
                     if (fila.IsNewRow) continue;
@@ -247,16 +301,16 @@ namespace TFinal
                     string importe = fila.Cells["ColImporte"].Value?.ToString() ?? "";
 
                     AddCell(tabla, cod, normalFont2, Element.ALIGN_LEFT);
-                    AddCell(tabla, prod, normalFont2, Element.ALIGN_CENTER);
+                    AddCell(tabla, prod, normalFont2, Element.ALIGN_LEFT);
                     AddCell(tabla, precio, normalFont2, Element.ALIGN_LEFT);
                     AddCell(tabla, cant, normalFont2, Element.ALIGN_CENTER);
                     AddCell(tabla, importe, normalFont2, Element.ALIGN_LEFT);
                 }
 
                 doc.Add(tabla);
-                doc.Add(new Paragraph("----------------------------------------------------------------------------", smallFont));
+                doc.Add(new Paragraph("--------------------------------------------------------------------------------------", smallFont));
 
-                // Totales (alineación exacta como en imagen)
+                // Totales
                 decimal subtotal = 0m, igv = 0m, total = 0m, pago = 0m, vuelto = 0m;
                 decimal.TryParse(txtInafecto.Text, out subtotal);
                 decimal.TryParse(txtIGV.Text, out igv);
@@ -264,20 +318,20 @@ namespace TFinal
                 decimal.TryParse(txtSoles.Text, out pago);
                 decimal.TryParse(txtVuelto.Text, out vuelto);
 
-                doc.Add(new Paragraph($"SUBTOTAL: S/ {subtotal.ToString("0.00").PadLeft(10)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
-                doc.Add(new Paragraph($"IGV (18%): S/ {igv.ToString("0.00").PadLeft(10)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
-                doc.Add(new Paragraph($"TOTAL: S/ {total.ToString("0.00").PadLeft(10)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
-                doc.Add(new Paragraph("---------------------------------------------------------------------------", smallFont));
+                doc.Add(new Paragraph($"SUBTOTAL:   S/ {subtotal.ToString("0.00").PadLeft(10)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
+                doc.Add(new Paragraph($"IGV (18%):      S/ {igv.ToString("0.00").PadLeft(10)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
+                doc.Add(new Paragraph($"TOTAL:      S/ {total.ToString("0.00").PadLeft(9)}", negritaFont3) { Alignment = Element.ALIGN_LEFT });
+                doc.Add(new Paragraph("-------------------------------------------------------------------------------------", smallFont));
 
-                // Monto en letras (alineado a la izquierda con sangría)
-                doc.Add(new Paragraph($"SON: {NumeroALetras(total)}", normalFont) { Alignment = Element.ALIGN_LEFT });
+                // Monto en letras
+                doc.Add(new Paragraph($"SON: {NumeroALetras(total)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
 
-                // Pago y vuelto (alineación exacta como en imagen)
-                doc.Add(new Paragraph($"PAGO: S/ {pago.ToString("0.00").PadLeft(10)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
-                doc.Add(new Paragraph($"VUELTO: S/ {vuelto.ToString("0.00").PadLeft(10)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
+                // Pago y vuelto
+                doc.Add(new Paragraph($"PAGO:     S/ {pago.ToString("0.00").PadLeft(8)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
+                doc.Add(new Paragraph($"VUELTO: S/ {vuelto.ToString("0.00").PadLeft(7)}", negritaFont) { Alignment = Element.ALIGN_LEFT });
                 doc.Add(new Paragraph(" "));
 
-                // Mensaje final (centrado)
+                // Mensaje final 
                 doc.Add(new Paragraph("¡Gracias por su compra!", smallFont) { Alignment = Element.ALIGN_CENTER });
 
                 doc.Close();
@@ -290,6 +344,8 @@ namespace TFinal
             }
         }
 
+        // Método AddCell que soportar color 
+        //Se utiliza para agregar celdas a la tabla con un texto, fuente y alineación específicos 
         private void AddCell(PdfPTable table, string text, Font font, int alignment)
         {
             PdfPCell cell = new PdfPCell(new Phrase(text, font));
@@ -301,7 +357,7 @@ namespace TFinal
         }
 
 
-        // Conversor a letras (ya integrado)
+        // Conversor de números a letras 
         private string NumeroALetras(decimal numero)
         {
             string decimales = "";
