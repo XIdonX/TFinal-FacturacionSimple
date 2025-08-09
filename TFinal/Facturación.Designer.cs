@@ -167,6 +167,7 @@
             txtDocumento.Name = "txtDocumento";
             txtDocumento.Size = new Size(209, 25);
             txtDocumento.TabIndex = 12;
+            txtDocumento.TextChanged += txtDocumento_TextChanged;
             // 
             // groupBox1
             // 
